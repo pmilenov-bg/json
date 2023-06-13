@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-func printTree(entry, indent string, isLast bool) (error, []string, []string) {
+func presentTree(entry, indent string, isLast bool) (error, []string, []string) {
 	var listofFiles []string
 	var listofFolders []string
 
@@ -39,9 +39,9 @@ func printTree(entry, indent string, isLast bool) (error, []string, []string) {
 				newIndent = indent + "│   "
 				isLast = false
 			}
-			err, childListofFolders, childListofFiles := printTree(path, newIndent, isLast)
+			err, childListofFolders, childListofFiles := presentTree(path, newIndent, isLast)
 			listofFiles = append(listofFiles, childListofFiles...)
-			listofFolders = append(listofFiles, childListofFolders...)
+			listofFolders = append(listofFolders, childListofFolders...)
 
 			if err != nil {
 				return err, listofFolders, listofFolders
@@ -56,20 +56,20 @@ func printTree(entry, indent string, isLast bool) (error, []string, []string) {
 }
 
 func main() {
-	tempDir, err := ioutil.TempDir("", "example") // is this the writh spelling?
-	if err != nil {
-		fmt.Println("Failed to create temporary directory:", err)
-		return
-	}
-	defer os.RemoveAll(tempDir)
-
-	fmt.Println("Temporary directory created:", tempDir)
-
-	// err, listofFolders, listofFiles := printTree(directory, "", true)
+	// tempDir, err := ioutil.TempDir("", "example")
 	// if err != nil {
-	// 	fmt.Printf("Error printing tree: %s\n", err.Error())
+	// 	fmt.Println("Failed to create temporary directory:", err)
 	// 	return
 	// }
-	// fmt.Printf("%d folders, %d files", len(listofFolders), len(listofFiles))
+	// defer os.RemoveAll(tempDir)
+	// fmt.Println("Temporary directory created:", tempDir)
+	directory := "/home/pete/-=Note=-"
+
+	err, listofFolders, listofFiles := presentTree(directory, "", true)
+	if err != nil {
+		fmt.Printf("Error printing tree: %s\n", err.Error())
+		return
+	}
+	fmt.Printf("%d folders, %d files\n", len(listofFolders), len(listofFiles))
 
 }

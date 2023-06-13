@@ -5,11 +5,14 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"testing"
 )
 
 func setup() {
 	fmt.Println("Setup Stage")
-	// Perform any setup operations here
+
+	createDirectory()
+
 }
 
 func teardown() {
@@ -17,11 +20,13 @@ func teardown() {
 	// Perform any teardown operations here
 }
 
-func createTestDirectoryStructure() (string, error) {
+func createDirectory() (string, error) {
 	tempDir, err := ioutil.TempDir("", "example")
 	if err != nil {
 		return "", err
 	}
+	defer os.RemoveAll(tempDir)
+	fmt.Println("Temporary directory created:", tempDir)
 
 	// Create test directory structure
 	err = os.Mkdir(filepath.Join(tempDir, "pete"), 0755)
@@ -38,7 +43,7 @@ func createTestDirectoryStructure() (string, error) {
 		return "", err
 	}
 
-	err = ioutil.WriteFile(filepath.Join(tempDir, "pete", "cv.txt"), []byte("this_is_cv_file_name"), 0644)
+	err = ioutil.WriteFile(filepath.Join(tempDir, "pete", "cv.txt"), []byte("this_is_cv_file"), 0644)
 	if err != nil {
 		return "", err
 	}
@@ -46,10 +51,13 @@ func createTestDirectoryStructure() (string, error) {
 	return tempDir, nil
 }
 
-// func test
-// func testMain(m *testing.M) {
-// 	setup()
-// 	defer teardown()
+func TestPresentTree() {
 
-// 	m.Run()
-// }
+}
+
+func testMain(m *testing.M) {
+	setup()
+	defer teardown()
+
+	m.Run()
+}
